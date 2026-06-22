@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+:root {
+  --color-primary: #006B6B;
+  --color-primary-light: #E0F4F4;
+  --color-gold: #C9A84C;
+  --color-gold-light: #FDF8ED;
+  --color-background: #FAF6EF;
+  --color-dark: #0C1829;
+  --color-muted: #5A6B7A;
+  --color-border: #DDE8E8;
+  --color-success: #15803D;
+  --color-error: #B91C1C;
+}
+
+html {
+  background-color: #FAF6EF;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FAF6EF;
+  color: #0C1829;
+  font-family: var(--font-inter), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #FAF6EF; }
+::-webkit-scrollbar-thumb { background: #006B6B44; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #006B6B; }
+
+*:focus-visible {
+  outline: 2px solid #006B6B;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .container-lg { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+  .container-md { @apply max-w-5xl mx-auto px-4 sm:px-6; }
+  .container-sm { @apply max-w-3xl mx-auto px-4 sm:px-6; }
+}
