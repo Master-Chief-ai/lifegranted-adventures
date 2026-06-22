@@ -38,7 +38,8 @@
       "Bash(curl -s -X POST http://localhost:3000/api/operator/availability -H 'Content-Type: application/json' -d '{\"tourId\":\"tour-1\",\"dates\":[{\"date\":\"2026-08-01\",\"slotsTotal\":8,\"slotsRemaining\":6,\"priceOverride\":null}]}')",
       "Bash(npx next *)",
       "Bash(npx eslint *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git init *)"
     ]
   }
 }
