@@ -15,7 +15,7 @@ const TOURIST_STEPS = [
 const OPERATOR_STEPS = [
   { icon: ClipboardList, title: 'Apply and get verified', text: 'Submit your TTB license and business details for review — usually within 24 hours.' },
   { icon: Wallet, title: 'List your tours', text: 'Add your tours, pricing, availability, and photos. Go live once approved.' },
-  { icon: Headset, title: 'Get booked, get paid', text: 'Receive bookings with 88% payout sent automatically via Stripe Connect.' },
+  { icon: Headset, title: 'Get booked, get paid', text: 'Receive bookings with 88% payout sent automatically via Flutterwave.' },
 ]
 
 export default function HowItWorksPage() {

@@ -238,9 +238,9 @@ export function OperatorProfileForm({ operator }: { operator: Operator }) {
         <section className="rounded-xl border border-border bg-white p-5">
           <h2 className="font-display text-lg font-semibold text-navy">Payout &amp; Banking</h2>
           <p className="mt-2 text-sm text-muted">
-            Stripe Connect status:{' '}
-            <span className={operator.stripe_onboarding_complete ? 'font-medium text-[#15803D]' : 'font-medium text-gold-dark'}>
-              {operator.stripe_onboarding_complete ? 'Connected' : 'Not connected'}
+            Flutterwave payout status:{' '}
+            <span className={operator.flutterwave_onboarding_complete ? 'font-medium text-[#15803D]' : 'font-medium text-gold-dark'}>
+              {operator.flutterwave_onboarding_complete ? 'Connected' : 'Not connected'}
             </span>
           </p>
           <Link href="/portal/payouts" className="mt-1 inline-block text-sm font-medium text-teal hover:underline">

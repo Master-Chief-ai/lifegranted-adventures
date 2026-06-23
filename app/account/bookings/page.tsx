@@ -58,7 +58,7 @@ export default async function AccountBookingsPage({ searchParams }: { searchPara
                   <Badge variant={STATUS_VARIANT[booking.booking_status]}>{booking.booking_status}</Badge>
                 </div>
                 <p className="text-sm text-muted">
-                  {formatDate(booking.travel_date)} · {booking.group_size} guests · {formatCurrency(booking.total_usd)}
+                  {formatDate(booking.travel_date)} · {booking.group_size} guests · {formatCurrency(booking.charged_to_tourist_usd)} paid
                 </p>
                 <p className="text-xs text-muted">Ref: {booking.booking_ref}</p>
               </div>

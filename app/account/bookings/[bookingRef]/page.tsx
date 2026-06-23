@@ -38,8 +38,12 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
         <h3 className="font-display text-base font-semibold text-navy">Payment Receipt</h3>
         <div className="mt-3 space-y-1.5 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted">Tour total</span>
+            <span className="text-muted">Tour price</span>
             <span className="text-navy">{formatCurrency(booking.total_usd)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted">Booking fee</span>
+            <span className="text-navy">{formatCurrency(booking.booking_fee_usd)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted">Payment status</span>
@@ -47,7 +51,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
           </div>
           <div className="flex justify-between border-t border-border pt-1.5 font-semibold">
             <span className="text-navy">Total Paid</span>
-            <span className="text-gold-dark">{formatCurrency(booking.total_usd)}</span>
+            <span className="text-gold-dark">{formatCurrency(booking.charged_to_tourist_usd)}</span>
           </div>
         </div>
       </Card>

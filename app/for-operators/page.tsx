@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const BENEFITS = [
   'Only 12% commission — half the industry standard',
-  'Automatic 88% payout via Stripe Connect',
+  'Automatic 88% payout via Flutterwave',
   'Instant booking confirmation, no back-and-forth',
   'Featured placement for top-rated operators',
   'Dedicated Mwanza-based support team',

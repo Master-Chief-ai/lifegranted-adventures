@@ -52,12 +52,23 @@ export default async function BookingConfirmedPage({
             <p className="font-medium text-navy">{booking.group_size} guests</p>
           </div>
           <div>
-            <p className="text-muted">Total Paid</p>
-            <p className="font-medium text-gold-dark">{formatCurrency(booking.total_usd)}</p>
-          </div>
-          <div>
             <p className="text-muted">Status</p>
             <p className="font-medium text-[#15803D] capitalize">{booking.booking_status}</p>
+          </div>
+        </div>
+
+        <div className="mt-4 space-y-1.5 border-t border-border pt-3 text-sm">
+          <div className="flex justify-between">
+            <span className="text-muted">Tour price</span>
+            <span className="text-navy">{formatCurrency(booking.total_usd)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted">Booking fee</span>
+            <span className="text-navy">{formatCurrency(booking.booking_fee_usd)}</span>
+          </div>
+          <div className="flex justify-between border-t border-border pt-1.5 font-semibold">
+            <span className="text-navy">Total paid</span>
+            <span className="text-gold-dark">{formatCurrency(booking.charged_to_tourist_usd)}</span>
           </div>
         </div>
         <a

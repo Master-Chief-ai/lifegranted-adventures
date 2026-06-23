@@ -70,12 +70,16 @@ export async function GET(_request: Request, { params }: { params: Promise<{ ref
 
         <Text style={styles.sectionTitle}>Payment</Text>
         <View style={styles.row}>
-          <Text style={styles.label}>Total Paid</Text>
+          <Text style={styles.label}>Tour Total</Text>
           <Text style={styles.value}>{formatCurrency(booking.total_usd)}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.label}>Platform Fee (12%)</Text>
-          <Text style={styles.value}>{formatCurrency(booking.platform_fee_usd)}</Text>
+          <Text style={styles.label}>Booking Fee</Text>
+          <Text style={styles.value}>{formatCurrency(booking.booking_fee_usd)}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Total Charged</Text>
+          <Text style={styles.value}>{formatCurrency(booking.charged_to_tourist_usd)}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Payment Date</Text>

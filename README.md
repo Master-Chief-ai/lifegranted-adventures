@@ -6,7 +6,7 @@ Tanzania's premier two-sided safari marketplace connecting tourists with vetted 
 
 - **Framework**: Next.js (App Router) + TypeScript
 - **Database**: Supabase (PostgreSQL + Auth + RLS)
-- **Payments**: Stripe Connect (cards) + Flutterwave (M-Pesa)
+- **Payments**: Flutterwave (cards worldwide + East African mobile money — M-Pesa, Airtel Money, Tigo Pesa)
 - **Styling**: Tailwind CSS + Radix UI
 - **Images**: Cloudinary
 - **Email**: Resend + React Email
@@ -22,7 +22,7 @@ Tanzania's premier two-sided safari marketplace connecting tourists with vetted 
 4. Run `npm run dev`
 5. Visit http://localhost:3000
 
-The platform runs fully on mock data when Supabase/Stripe/Flutterwave/Cloudinary/Resend keys are placeholders — every page, the full booking flow, the operator portal, and the admin panel are explorable with zero real accounts connected.
+The platform runs fully on mock data when Supabase/Flutterwave/Cloudinary/Resend keys are placeholders — every page, the full booking flow, the operator portal, and the admin panel are explorable with zero real accounts connected.
 
 ## Database Setup
 
@@ -57,7 +57,7 @@ Run these SQL files in your Supabase SQL Editor (in order):
 ## Commission Structure
 
 - Platform takes 12% of each booking
-- Operator receives 88% via automatic Stripe Connect transfer
+- Operator receives 88% via automatic Flutterwave transfer
 - Payouts released within 3 business days of tour completion
 
 Built with ❤️ in Mwanza, Tanzania 🇹🇿

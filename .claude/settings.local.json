@@ -39,7 +39,23 @@
       "Bash(npx next *)",
       "Bash(npx eslint *)",
       "Bash(git add *)",
-      "Bash(git init *)"
+      "Bash(git init *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(git fetch *)",
+      "Bash(git config *)",
+      "Bash(npm config *)",
+      "Bash(mkdir -p ~/.npm-global)",
+      "Bash(npm uninstall *)",
+      "Bash(curl -s -X POST http://localhost:3000/api/operator/setup-payout -H 'Content-Type: application/json' -d '{\"businessName\":\"Test Ops\",\"email\":\"ops@example.com\",\"bankName\":\"CRDB\",\"accountNumber\":\"1234567890\",\"accountHolderName\":\"Test Ops\"}')",
+      "Bash(curl -s http://localhost:3000/operator/register -o /dev/null -w \"register:%{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:3000/portal/payouts\" -o /dev/null -w \"payouts:%{http_code}\\\\n\")",
+      "Bash(npm list *)",
+      "Bash(curl -s -o /dev/null -w \"admin/bookings:%{http_code}\\\\n\" http://localhost:3000/admin/bookings)",
+      "Bash(curl -s -o /dev/null -w \"portal/bookings:%{http_code}\\\\n\" http://localhost:3000/portal/bookings)",
+      "Bash(curl -s -o /dev/null -w \"account/bookings:%{http_code}\\\\n\" http://localhost:3000/account/bookings)",
+      "Bash(curl -s http://localhost:3000/admin/bookings)"
     ]
   }
 }

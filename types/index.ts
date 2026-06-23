@@ -32,8 +32,8 @@ export interface Operator {
   phone: string | null
   whatsapp: string | null
   email: string | null
-  stripe_account_id: string | null
-  stripe_onboarding_complete: boolean
+  flutterwave_subaccount_id: string | null
+  flutterwave_onboarding_complete: boolean
   avg_rating: number
   total_reviews: number
   total_bookings: number
@@ -147,10 +147,12 @@ export interface Booking {
   total_usd: number
   platform_fee_usd: number
   operator_payout_usd: number
+  booking_fee_usd: number
+  charged_to_tourist_usd: number
   payment_status: PaymentStatus
   payment_method: string
   booking_status: BookingStatus
-  stripe_payment_intent_id: string | null
+  flutterwave_tx_ref: string | null
   payout_released: boolean
   review_reminder_sent?: boolean
   created_at: string

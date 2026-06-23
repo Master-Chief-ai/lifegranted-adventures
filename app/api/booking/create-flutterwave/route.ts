@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { isSupabaseConfigured, MOCK_TOURS, MOCK_OPERATORS } from '@/lib/supabase/mock-data'
 import { addRuntimeBooking } from '@/lib/supabase/runtime-bookings'
 import { sendBookingConfirmation } from '@/lib/email'
+import { initiatePayment, calculateFees, flutterwaveEnabled } from '@/lib/flutterwave'
 import type { Booking, Tour, Operator, TourAddon } from '@/types'
 
 const schema = z.object({
@@ -18,7 +19,12 @@ const schema = z.object({
   specialRequests: z.string().optional(),
   dietaryRequirements: z.string().optional(),
   medicalNotes: z.string().optional(),
-  paymentMethod: z.enum(['card', 'mobile_money']).default('card'),
+  paymentMethod: z.enum(['card', 'mpesa', 'airtel', 'tigo']),
+  // Client-computed figures, shown for UX continuity — the server always recalculates
+  // the authoritative tourTotal/bookingFee/grandTotal from the tour record below.
+  tourTotal: z.number().optional(),
+  bookingFee: z.number().optional(),
+  grandTotal: z.number().optional(),
 })
 
 function generateBookingRef() {
@@ -56,14 +62,25 @@ export async function POST(request: Request) {
 
     const selectedAddons: TourAddon[] = tour.addons.filter((a) => data.addons.includes(a.id))
     const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price_usd, 0) * data.groupSize
-    const totalUsd = tour.price_usd * data.groupSize + addonsTotal
-    const platformFee = Math.round(totalUsd * 0.12 * 100) / 100
-    const operatorPayout = Math.round(totalUsd * 0.88 * 100) / 100
-    const bookingRef = generateBookingRef()
+    const tourTotal = tour.price_usd * data.groupSize + addonsTotal
+    const { bookingFee, grandTotal, platformCommission, operatorPayout } = calculateFees(tourTotal, data.paymentMethod)
+    const txRef = generateBookingRef()
 
+    const paymentResult = await initiatePayment({
+      amount: grandTotal,
+      currency: 'USD',
+      email: data.touristEmail,
+      phone: data.touristWhatsapp,
+      name: data.touristName,
+      txRef,
+      paymentMethod: data.paymentMethod,
+      operatorSubaccountId: operator.flutterwave_subaccount_id,
+    })
+
+    const isMock = !flutterwaveEnabled
     const booking: Booking = {
       id: `mock-${Date.now()}`,
-      booking_ref: bookingRef,
+      booking_ref: txRef,
       tour_id: tour.id,
       operator_id: operator.id,
       tourist_id: null,
@@ -78,13 +95,15 @@ export async function POST(request: Request) {
       dietary_requirements: data.dietaryRequirements ?? null,
       medical_notes: data.medicalNotes ?? null,
       addons: selectedAddons,
-      total_usd: totalUsd,
-      platform_fee_usd: platformFee,
+      total_usd: tourTotal,
+      platform_fee_usd: platformCommission,
       operator_payout_usd: operatorPayout,
-      payment_status: 'paid',
+      booking_fee_usd: bookingFee,
+      charged_to_tourist_usd: grandTotal,
+      payment_status: isMock ? 'paid' : 'pending',
       payment_method: data.paymentMethod,
-      booking_status: 'confirmed',
-      stripe_payment_intent_id: null,
+      booking_status: isMock ? 'confirmed' : 'pending',
+      flutterwave_tx_ref: txRef,
       payout_released: false,
       created_at: new Date().toISOString(),
     }
@@ -107,20 +126,23 @@ export async function POST(request: Request) {
             dietary_requirements: data.dietaryRequirements ?? null,
             medical_notes: data.medicalNotes ?? null,
             addons: selectedAddons,
-            total_usd: totalUsd,
-            platform_fee_usd: platformFee,
+            total_usd: tourTotal,
+            platform_fee_usd: platformCommission,
             operator_payout_usd: operatorPayout,
-            payment_status: 'paid',
-            booking_status: 'confirmed',
+            booking_fee_usd: bookingFee,
+            charged_to_tourist_usd: grandTotal,
+            payment_status: booking.payment_status,
+            booking_status: booking.booking_status,
             payment_method: data.paymentMethod,
+            flutterwave_tx_ref: txRef,
             source: 'platform',
           })
           .select()
           .single()
         if (error) throw error
         if (inserted) {
-          await sendBookingConfirmation(inserted as Booking, tour, operator)
-          return NextResponse.json({ success: true, bookingRef: inserted.booking_ref, booking: inserted })
+          if (isMock) await sendBookingConfirmation(inserted as Booking, tour, operator)
+          return NextResponse.json(buildResponse(data.paymentMethod, isMock, txRef, inserted.booking_ref, inserted, paymentResult))
         }
       } catch {
         // fall through to mock booking below
@@ -128,10 +150,27 @@ export async function POST(request: Request) {
     }
 
     addRuntimeBooking(booking)
-    await sendBookingConfirmation(booking, tour, operator)
-    return NextResponse.json({ success: true, bookingRef: booking.booking_ref, booking })
+    if (isMock) await sendBookingConfirmation(booking, tour, operator)
+    return NextResponse.json(buildResponse(data.paymentMethod, isMock, txRef, booking.booking_ref, booking, paymentResult))
   } catch (error) {
     console.error('Booking creation failed', error)
     return NextResponse.json({ success: false, error: 'Invalid booking data' }, { status: 400 })
   }
+}
+
+function buildResponse(
+  paymentMethod: 'card' | 'mpesa' | 'airtel' | 'tigo',
+  isMock: boolean,
+  txRef: string,
+  bookingRef: string,
+  booking: unknown,
+  paymentResult: { data?: { link?: string } }
+) {
+  if (isMock) {
+    return { success: true, bookingRef, booking, txRef }
+  }
+  if (paymentMethod === 'card') {
+    return { success: true, txRef, bookingRef, redirectUrl: paymentResult.data?.link ?? null }
+  }
+  return { success: true, txRef, bookingRef, message: 'Check your phone' }
 }

@@ -3,11 +3,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Info } from 'lucide-react'
 import { useBookingContext } from '@/components/booking/BookingContext'
 import { getBookingDraft, saveBookingDraft, type BookingDraft } from '@/lib/booking-state'
 import { Button } from '@/components/ui/Button'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { calculateFees } from '@/lib/flutterwave'
 
 function seedRandom(seed: number) {
   const x = Math.sin(seed) * 10000
@@ -56,16 +57,19 @@ export default function BookingDatesPage() {
   const [draft, setDraft] = useState<BookingDraft>(() => getBookingDraft(params.tourSlug))
   const [viewDate, setViewDate] = useState(() => new Date())
 
-  useEffect(() => {
-    saveBookingDraft(draft)
-  }, [draft])
-
   const monthDays = useMemo(() => buildMonth(viewDate.getFullYear(), viewDate.getMonth()), [viewDate])
   const selectedDay = monthDays.find((d) => draft.date && d.date.toDateString() === new Date(draft.date).toDateString())
 
   const addonsTotal = tour.addons.filter((a) => draft.addons.includes(a.id)).reduce((sum, a) => sum + a.price_usd, 0) * draft.guests
   const subtotal = tour.price_usd * draft.guests
-  const total = subtotal + addonsTotal
+  const tourTotal = subtotal + addonsTotal
+  // Default to the card rate here; the payment step recalculates live per payment method.
+  const fees = calculateFees(tourTotal, 'card')
+
+  useEffect(() => {
+    saveBookingDraft({ ...draft, tourTotal: fees.tourTotal, bookingFee: fees.bookingFee, grandTotal: fees.grandTotal })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft.date, draft.guests, draft.addons])
 
   function selectDate(day: DayInfo) {
     if (day.status !== 'available') return
@@ -190,7 +194,7 @@ export default function BookingDatesPage() {
         <div className="mt-5 space-y-1.5 border-t border-border pt-4 text-sm">
           <div className="flex justify-between">
             <span className="text-muted">
-              Base: {draft.guests} × {formatCurrency(tour.price_usd)}
+              Base price: {draft.guests} × {formatCurrency(tour.price_usd)}
             </span>
             <span className="text-navy">{formatCurrency(subtotal)}</span>
           </div>
@@ -202,9 +206,24 @@ export default function BookingDatesPage() {
                 <span className="text-navy">+{formatCurrency(a.price_usd * draft.guests)}</span>
               </div>
             ))}
+          <div className="flex justify-between border-t border-border pt-1.5 font-medium">
+            <span className="text-navy">Tour total</span>
+            <span className="text-navy">{formatCurrency(fees.tourTotal)}</span>
+          </div>
+          <div className="flex items-center justify-between text-xs text-muted">
+            <span className="group relative flex items-center gap-1">
+              Booking fee (3.8%)
+              <Info size={12} className="cursor-help" />
+              <span className="pointer-events-none absolute bottom-full left-0 mb-1.5 w-60 rounded-lg bg-navy p-2.5 text-xs text-white opacity-0 shadow-card-hover transition-opacity group-hover:opacity-100">
+                This is a standard payment processing fee charged by our payment provider. It does not affect the operator&apos;s
+                price or your tour experience.
+              </span>
+            </span>
+            <span>{formatCurrency(fees.bookingFee)}</span>
+          </div>
           <div className="flex justify-between border-t border-border pt-1.5 text-base font-bold">
-            <span className="text-navy">Total</span>
-            <span className="text-teal">{formatCurrency(total)}</span>
+            <span className="text-navy">Total due today</span>
+            <span className="text-teal">{formatCurrency(fees.grandTotal)}</span>
           </div>
         </div>
 

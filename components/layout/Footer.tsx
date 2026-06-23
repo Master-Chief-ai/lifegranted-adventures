@@ -60,7 +60,7 @@ export function Footer() {
           <div className="container-lg flex flex-col items-center justify-between gap-3 py-5 text-xs text-[#5A6B7A] sm:flex-row">
             <p>© 2025 LifeGranted Adventures Ltd. TTB Licensed Travel Agent. Mwanza, Tanzania.</p>
             <p className="flex items-center gap-1.5">
-              <Lock size={12} /> Payments secured by Stripe + Flutterwave
+              <Lock size={12} /> Payments secured by Flutterwave
             </p>
           </div>
         </div>

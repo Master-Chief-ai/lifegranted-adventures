@@ -79,7 +79,7 @@ export default async function PortalDashboardPage() {
       </p>
 
       <div className="mt-6 space-y-3">
-        {!operator.stripe_onboarding_complete && (
+        {!operator.flutterwave_onboarding_complete && (
           <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-gold/40 bg-gold-light p-4">
             <p className="text-sm font-medium text-gold-dark">⚠️ Set up payouts to receive your earnings</p>
             <Link href="/portal/payouts" className={cn(buttonVariants({ variant: 'gold', size: 'sm' }))}>

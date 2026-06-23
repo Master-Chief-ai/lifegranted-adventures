@@ -26,8 +26,12 @@ interface WizardState {
   ttbNumber: string
   ttbExpiry: string
   tatoMember: boolean
-  stripeConnected: boolean
-  stripeSkipped: boolean
+  bankName: string
+  accountNumber: string
+  accountHolderName: string
+  flutterwaveSubaccountId: string | null
+  payoutConnected: boolean
+  payoutSkipped: boolean
   firstTour: {
     title: string
     tourType: string
@@ -63,8 +67,12 @@ function initialState(): WizardState {
     ttbNumber: '',
     ttbExpiry: '',
     tatoMember: false,
-    stripeConnected: false,
-    stripeSkipped: false,
+    bankName: 'NMB',
+    accountNumber: '',
+    accountHolderName: '',
+    flutterwaveSubaccountId: null,
+    payoutConnected: false,
+    payoutSkipped: false,
     firstTour: null,
     confirmAccurate: false,
   }
@@ -120,6 +128,7 @@ export default function OperatorRegisterWizard() {
             ttb_licence_number: data.ttbNumber,
             ttb_expiry: data.ttbExpiry,
             tato_member: data.tatoMember,
+            flutterwave_subaccount_id: data.flutterwaveSubaccountId,
             status: 'pending',
           })
           if (data.firstTour) {
@@ -271,12 +280,35 @@ function Step2Payout({
   onContinue: () => void
 }) {
   const [connecting, setConnecting] = useState(false)
+  const banksAvailable = ['NMB', 'CRDB', 'NBC', 'Stanbic', 'Equity', 'Other']
 
   async function connect() {
+    if (!data.accountNumber || !data.accountHolderName) {
+      toast.error('Please enter your bank account details')
+      return
+    }
     setConnecting(true)
-    await new Promise((r) => setTimeout(r, 1000))
-    update('stripeConnected', true)
-    setConnecting(false)
+    try {
+      const res = await fetch('/api/operator/setup-payout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          businessName: data.businessName,
+          email: data.email,
+          bankName: data.bankName,
+          accountNumber: data.accountNumber,
+          accountHolderName: data.accountHolderName,
+        }),
+      })
+      if (!res.ok) throw new Error()
+      const result = await res.json()
+      update('flutterwaveSubaccountId', result.subaccountId ?? null)
+      update('payoutConnected', true)
+    } catch {
+      toast.error('Could not save bank details. Please try again.')
+    } finally {
+      setConnecting(false)
+    }
   }
 
   return (
@@ -284,27 +316,45 @@ function Step2Payout({
       <h1 className="font-display text-2xl font-bold text-navy">Set up your payout account</h1>
       <div className="mt-4 rounded-xl border border-teal/30 bg-teal-light p-5 text-sm text-teal">
         Every booking you receive, we automatically transfer 88% to your bank account within 3 business days of tour
-        completion. Setup takes about 10 minutes.
+        completion via Flutterwave. Setup takes about 2 minutes.
       </div>
 
-      {data.stripeConnected ? (
+      {data.payoutConnected ? (
         <div className="mt-6 rounded-xl border border-[#15803D]/30 bg-green-50 p-5 text-center">
-          <p className="font-semibold text-[#15803D]">✓ Payout account connected (Development Mode)</p>
+          <p className="font-semibold text-[#15803D]">✓ Bank details saved</p>
         </div>
       ) : (
-        <Button className="mt-6 w-full" disabled={connecting} onClick={connect}>
-          {connecting ? 'Connecting…' : 'Connect with Stripe'}
-        </Button>
+        <div className="mt-6 space-y-4 rounded-xl border border-border bg-white p-6">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-navy">Bank Name</label>
+            <select
+              className="h-11 w-full rounded-lg border border-border bg-white px-3 text-sm text-navy focus:border-teal"
+              value={data.bankName}
+              onChange={(e) => update('bankName', e.target.value)}
+            >
+              {banksAvailable.map((b) => (
+                <option key={b} value={b}>
+                  {b}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Input label="Account Number" value={data.accountNumber} onChange={(e) => update('accountNumber', e.target.value)} />
+          <Input label="Account Holder Name" value={data.accountHolderName} onChange={(e) => update('accountHolderName', e.target.value)} />
+          <Button className="w-full" disabled={connecting} onClick={connect}>
+            {connecting ? 'Saving…' : 'Save Bank Details'}
+          </Button>
+        </div>
       )}
 
       <div className="mt-8 text-right">
         <Button onClick={onContinue}>Continue →</Button>
       </div>
 
-      {!data.stripeConnected && (
+      {!data.payoutConnected && (
         <button
           onClick={() => {
-            update('stripeSkipped', true)
+            update('payoutSkipped', true)
             onContinue()
           }}
           className="mt-3 block text-sm text-muted hover:underline"
@@ -312,7 +362,7 @@ function Step2Payout({
           Skip for now — set up later
         </button>
       )}
-      {data.stripeSkipped && !data.stripeConnected && (
+      {data.payoutSkipped && !data.payoutConnected && (
         <p className="mt-2 text-xs text-gold-dark">You won&apos;t receive payouts until this is set up.</p>
       )}
     </div>
@@ -436,7 +486,7 @@ function Step4Review({
               Edit
             </button>
           </div>
-          <p className="mt-1 text-sm text-muted">{data.stripeConnected ? 'Stripe connected' : 'Not yet connected'}</p>
+          <p className="mt-1 text-sm text-muted">{data.payoutConnected ? 'Bank details saved' : 'Not yet connected'}</p>
         </div>
         <div className="rounded-xl border border-border bg-white p-5">
           <div className="flex items-center justify-between">

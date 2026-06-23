@@ -3,7 +3,7 @@ import { getOperatorBookings } from '@/lib/supabase/queries'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { formatCurrency, formatDate } from '@/lib/utils'
-import { StripeConnectCard } from '@/components/portal/StripeConnectCard'
+import { FlutterwavePayoutCard } from '@/components/portal/FlutterwavePayoutCard'
 import { ExportCsvButton } from '@/components/portal/ExportCsvButton'
 
 export default async function PortalPayoutsPage() {
@@ -51,7 +51,7 @@ export default async function PortalPayoutsPage() {
       </div>
 
       <div className="mt-6">
-        <StripeConnectCard operator={operator} />
+        <FlutterwavePayoutCard operator={operator} />
       </div>
 
       <div className="mt-8 flex items-center justify-between">

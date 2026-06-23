@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import { stripe } from '@/lib/stripe'
+import { flutterwaveEnabled } from '@/lib/flutterwave'
 import { adminSupabase } from '@/lib/supabase/admin'
 import { getBookingByRef } from '@/lib/supabase/queries'
 
@@ -13,11 +13,18 @@ export async function POST(request: Request, { params }: { params: Promise<{ ref
   const booking = await getBookingByRef(ref)
   if (!booking) return NextResponse.json({ success: false, error: 'Booking not found' }, { status: 404 })
 
-  if (stripe && booking.stripe_payment_intent_id) {
+  if (flutterwaveEnabled && booking.flutterwave_tx_ref) {
     try {
-      await stripe.refunds.create({ payment_intent: booking.stripe_payment_intent_id, amount: Math.round(amount * 100) })
+      await fetch(`https://api.flutterwave.com/v3/transactions/${booking.flutterwave_tx_ref}/refund`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.FLUTTERWAVE_SECRET_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount }),
+      })
     } catch (error) {
-      console.error('Stripe refund failed', error)
+      console.error('Flutterwave refund failed', error)
     }
   } else {
     console.log(`[MOCK REFUND] ${ref}: $${amount} — ${reason}`)

@@ -17,7 +17,7 @@ export default function PrivacyPage() {
         <h2 className="font-display text-xl font-bold text-navy">2. How We Use It</h2>
         <p>To process bookings, communicate with you about your trip, and share necessary details with your tour operator.</p>
         <h2 className="font-display text-xl font-bold text-navy">3. Data Sharing</h2>
-        <p>We share booking details only with the relevant operator and payment processors (Stripe, Flutterwave).</p>
+        <p>We share booking details only with the relevant operator and our payment processor, Flutterwave.</p>
         <h2 className="font-display text-xl font-bold text-navy">4. Your Rights</h2>
         <p>You may request access to, correction of, or deletion of your personal data at any time by contacting us.</p>
       </div>

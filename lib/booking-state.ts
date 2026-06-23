@@ -17,6 +17,9 @@ export interface BookingDraft {
   hearAboutUs: string
   agreedTerms: boolean
   agreedConsent: boolean
+  tourTotal: number
+  bookingFee: number
+  grandTotal: number
 }
 
 const STORAGE_KEY = 'lga_booking_draft'
@@ -57,5 +60,8 @@ export function defaultDraft(tourSlug: string): BookingDraft {
     hearAboutUs: '',
     agreedTerms: false,
     agreedConsent: false,
+    tourTotal: 0,
+    bookingFee: 0,
+    grandTotal: 0,
   }
 }

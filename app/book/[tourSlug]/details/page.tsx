@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { COUNTRIES } from '@/lib/constants'
 import { getBookingDraft, saveBookingDraft, type BookingDraft } from '@/lib/booking-state'
+import { formatCurrency } from '@/lib/utils'
 
 const schema = z
   .object({
@@ -95,6 +96,14 @@ export default function BookingDetailsPage() {
   return (
     <div>
       <h2 className="font-display text-2xl font-bold text-navy">Guest Details</h2>
+
+      <div className="mt-4 flex flex-wrap items-center gap-2 rounded-lg border border-border bg-white px-4 py-3 text-sm">
+        <span className="text-navy">Tour total: {formatCurrency(draft.tourTotal)}</span>
+        <span className="text-muted">+</span>
+        <span className="text-navy">Booking fee: {formatCurrency(draft.bookingFee)}</span>
+        <span className="text-muted">=</span>
+        <span className="font-semibold text-teal">Total: {formatCurrency(draft.grandTotal)}</span>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-8">
         <section className="rounded-xl border border-border bg-white p-5">

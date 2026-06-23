@@ -42,8 +42,11 @@ export function AdminBookingsManager({ bookings }: { bookings: BookingWithDetail
     Operator: b.operator.business_name,
     Tour: b.tour.title,
     'Travel Date': formatDate(b.travel_date),
-    Total: b.total_usd,
-    'Platform Fee': b.platform_fee_usd,
+    'Charged to Tourist': b.charged_to_tourist_usd,
+    'Tour Total': b.total_usd,
+    'Booking Fee': b.booking_fee_usd,
+    'Platform Revenue': b.platform_fee_usd,
+    'Operator Payout': b.operator_payout_usd,
     Status: b.booking_status,
     Payment: b.payment_method,
     Created: formatDate(b.created_at),
@@ -98,8 +101,8 @@ export function AdminBookingsManager({ bookings }: { bookings: BookingWithDetail
               <th className="px-4 py-3">Operator</th>
               <th className="px-4 py-3">Tour</th>
               <th className="px-4 py-3">Travel Date</th>
-              <th className="px-4 py-3">Total</th>
-              <th className="px-4 py-3">Fee</th>
+              <th className="px-4 py-3">Charged</th>
+              <th className="px-4 py-3">Platform Revenue</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Payment</th>
             </tr>
@@ -112,7 +115,7 @@ export function AdminBookingsManager({ bookings }: { bookings: BookingWithDetail
                 <td className="px-4 py-3 text-muted">{b.operator.business_name}</td>
                 <td className="px-4 py-3 text-navy">{b.tour.title}</td>
                 <td className="px-4 py-3 text-muted">{formatDate(b.travel_date)}</td>
-                <td className="px-4 py-3 text-navy">{formatCurrency(b.total_usd)}</td>
+                <td className="px-4 py-3 text-navy">{formatCurrency(b.charged_to_tourist_usd)}</td>
                 <td className="px-4 py-3 text-muted">{formatCurrency(b.platform_fee_usd)}</td>
                 <td className="px-4 py-3 capitalize text-navy">{b.booking_status}</td>
                 <td className="px-4 py-3 capitalize text-muted">{b.payment_method}</td>
@@ -137,7 +140,7 @@ function AdminBookingDetailModal({
   onUpdated: (b: BookingWithDetails) => void
 }) {
   const [refundOpen, setRefundOpen] = useState(false)
-  const [refundAmount, setRefundAmount] = useState(booking.total_usd)
+  const [refundAmount, setRefundAmount] = useState(booking.charged_to_tourist_usd)
   const [refundReason, setRefundReason] = useState('')
   const [note, setNote] = useState('')
   const [loading, setLoading] = useState(false)
@@ -200,12 +203,24 @@ function AdminBookingDetailModal({
             <span className="text-navy">{booking.tour.title}</span>
           </p>
           <p>
-            <span className="text-muted">Total: </span>
+            <span className="text-muted">Charged to tourist: </span>
+            <span className="text-navy">{formatCurrency(booking.charged_to_tourist_usd)}</span>
+          </p>
+          <p>
+            <span className="text-muted">Tour total: </span>
             <span className="text-navy">{formatCurrency(booking.total_usd)}</span>
           </p>
           <p>
-            <span className="text-muted">Platform Fee: </span>
+            <span className="text-muted">Booking fee (passes through to Flutterwave): </span>
+            <span className="text-navy">{formatCurrency(booking.booking_fee_usd)}</span>
+          </p>
+          <p>
+            <span className="text-muted">Platform revenue (your earnings): </span>
             <span className="text-navy">{formatCurrency(booking.platform_fee_usd)}</span>
+          </p>
+          <p>
+            <span className="text-muted">Operator payout: </span>
+            <span className="text-navy">{formatCurrency(booking.operator_payout_usd)}</span>
           </p>
           <p>
             <span className="text-muted">Payment: </span>
@@ -213,7 +228,7 @@ function AdminBookingDetailModal({
           </p>
           <p>
             <span className="text-muted">Transaction ID: </span>
-            <span className="font-mono text-xs text-navy">{booking.stripe_payment_intent_id ?? `mock_txn_${booking.id}`}</span>
+            <span className="font-mono text-xs text-navy">{booking.flutterwave_tx_ref ?? `mock_txn_${booking.id}`}</span>
           </p>
         </div>
 

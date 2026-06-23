@@ -143,7 +143,7 @@ export function BookingDetailsPanel({
 
           <Tabs.Content value="financials" className="space-y-2 py-4 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted">Total booking value</span>
+              <span className="text-muted">Booking value (tour total)</span>
               <span className="text-navy">{formatCurrency(booking.total_usd)}</span>
             </div>
             <div className="flex justify-between">
