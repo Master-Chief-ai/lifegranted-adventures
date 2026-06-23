@@ -49,10 +49,21 @@ function LoginForm() {
     setLoading(true)
     try {
       const supabase = createClient()
-      const { error } = await supabase.auth.signInWithPassword(values)
+      const { error, data } = await supabase.auth.signInWithPassword(values)
       if (error) throw error
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single()
       toast.success('Welcome back!')
-      router.push(returnTo)
+      if (profile?.role === 'admin') {
+        router.push('/admin')
+      } else if (profile?.role === 'operator') {
+        router.push('/portal')
+      } else {
+        router.push(returnTo === '/auth/login' ? '/' : returnTo)
+      }
     } catch {
       toast.error('Invalid email or password. Please try again.')
     } finally {
