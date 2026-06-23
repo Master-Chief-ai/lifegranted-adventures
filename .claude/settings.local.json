@@ -55,7 +55,8 @@
       "Bash(curl -s -o /dev/null -w \"admin/bookings:%{http_code}\\\\n\" http://localhost:3000/admin/bookings)",
       "Bash(curl -s -o /dev/null -w \"portal/bookings:%{http_code}\\\\n\" http://localhost:3000/portal/bookings)",
       "Bash(curl -s -o /dev/null -w \"account/bookings:%{http_code}\\\\n\" http://localhost:3000/account/bookings)",
-      "Bash(curl -s http://localhost:3000/admin/bookings)"
+      "Bash(curl -s http://localhost:3000/admin/bookings)",
+      "Bash(git commit *)"
     ]
   }
 }
