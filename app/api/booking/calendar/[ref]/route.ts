@@ -22,7 +22,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ ref
     'VERSION:2.0',
     'PRODID:-//LifeGranted Adventures//Booking//EN',
     'BEGIN:VEVENT',
-    `UID:${booking.booking_ref}@lifegrantedadventures.co.tz`,
+    `UID:${booking.booking_ref}@lifegranted-adventures.co.tz`,
     `DTSTAMP:${toICSDate(new Date())}`,
     `DTSTART:${toICSDate(start)}`,
     `DTEND:${toICSDate(end)}`,
