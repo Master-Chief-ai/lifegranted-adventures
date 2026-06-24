@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import { getActiveTours, getAllOperators, getAllBlogPosts } from '@/lib/supabase/queries'
 import { DESTINATIONS } from '@/lib/constants'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://lifegrantedadventures.co.tz'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://lifegranted-adventures.co.tz'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [tours, operators, posts] = await Promise.all([getActiveTours(), getAllOperators(), getAllBlogPosts()])
