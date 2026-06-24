@@ -41,10 +41,10 @@ export default async function HomePage() {
           '@context': 'https://schema.org',
           '@type': 'WebSite',
           name: 'LifeGranted Adventures',
-          url: 'https://lifegrantedadventures.co.tz',
+          url: 'https://lifegranted-adventures.co.tz',
           potentialAction: {
             '@type': 'SearchAction',
-            target: { '@type': 'EntryPoint', urlTemplate: 'https://lifegrantedadventures.co.tz/tours?q={search_term_string}' },
+            target: { '@type': 'EntryPoint', urlTemplate: 'https://lifegranted-adventures.co.tz/tours?q={search_term_string}' },
             'query-input': 'required name=search_term_string',
           },
         }}
@@ -54,8 +54,8 @@ export default async function HomePage() {
           '@context': 'https://schema.org',
           '@type': 'Organization',
           name: 'LifeGranted Adventures',
-          url: 'https://lifegrantedadventures.co.tz',
-          logo: 'https://lifegrantedadventures.co.tz/logo.png',
+          url: 'https://lifegranted-adventures.co.tz',
+          logo: 'https://lifegranted-adventures.co.tz/logo.png',
           description: "Tanzania's premier safari marketplace",
           address: { '@type': 'PostalAddress', addressLocality: 'Mwanza', addressCountry: 'TZ' },
           contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', availableLanguage: ['English', 'Swahili'] },
