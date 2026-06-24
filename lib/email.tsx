@@ -10,6 +10,12 @@ const apiKey = process.env.RESEND_API_KEY
 const emailEnabled = !!apiKey && !apiKey.includes('placeholder')
 const resend = emailEnabled ? new Resend(apiKey) : null
 
+const FROM = 'LifeGranted Adventures <hello@lifegranted-adventures.co.tz>'
+const ADMIN_EMAIL = process.env.PLATFORM_ADMIN_EMAIL ?? 'stephen@lifegranted-adventures.co.tz'
+const SITE_URL = process.env.NEXT_PUBLIC_PLATFORM_URL ?? 'https://lifegranted-adventures.co.tz'
+
+// ─── React-email dispatcher (for rich template emails) ─────────────────────
+
 async function dispatchEmail(to: string, subject: string, react: React.ReactElement): Promise<{ success: boolean }> {
   if (!resend) {
     const html = await render(react)
@@ -17,18 +23,36 @@ async function dispatchEmail(to: string, subject: string, react: React.ReactElem
     return { success: true }
   }
   try {
-    await resend.emails.send({
-      from: 'LifeGranted Adventures <bookings@lifegrantedadventures.co.tz>',
-      to,
-      subject,
-      react,
-    })
+    await resend.emails.send({ from: FROM, to, subject, react })
     return { success: true }
   } catch (error) {
     console.error('Failed to send email', error)
     return { success: false }
   }
 }
+
+// ─── Plain HTML dispatcher (for simple status / notification emails) ────────
+
+async function dispatchHtml(
+  to: string,
+  subject: string,
+  html: string,
+  opts?: { replyTo?: string }
+): Promise<{ success: boolean }> {
+  if (!resend) {
+    console.log(`\n[MOCK EMAIL] To: ${to}\nSubject: ${subject}\n`)
+    return { success: true }
+  }
+  try {
+    await resend.emails.send({ from: FROM, to, subject, html, replyTo: opts?.replyTo })
+    return { success: true }
+  } catch (error) {
+    console.error('Failed to send email', error)
+    return { success: false }
+  }
+}
+
+// ─── Booking emails (React Email templates) ────────────────────────────────
 
 export async function sendOperatorNotification(booking: Booking, tour: Tour, operator: Operator) {
   if (!operator.email) return { success: false }
@@ -50,9 +74,127 @@ export async function sendBookingConfirmation(booking: Booking, tour: Tour, oper
 }
 
 export async function sendPreDeparture(booking: Booking, tour: Tour, operator: Operator) {
-  return dispatchEmail(booking.tourist_email, preDepartureSubject(booking), <PreDepartureEmail booking={booking} tour={tour} operator={operator} />)
+  return dispatchEmail(
+    booking.tourist_email,
+    preDepartureSubject(booking),
+    <PreDepartureEmail booking={booking} tour={tour} operator={operator} />
+  )
 }
 
 export async function sendReviewRequest(booking: Booking, tour: Tour, operatorName: string) {
-  return dispatchEmail(booking.tourist_email, reviewRequestSubject(booking), <ReviewRequestEmail booking={booking} tour={tour} operatorName={operatorName} />)
+  return dispatchEmail(
+    booking.tourist_email,
+    reviewRequestSubject(booking),
+    <ReviewRequestEmail booking={booking} tour={tour} operatorName={operatorName} />
+  )
+}
+
+// ─── Operator status emails ────────────────────────────────────────────────
+
+export async function sendOperatorApproved(operatorEmail: string, businessName: string) {
+  const html = `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:32px;">
+    <h2 style="color:#1a3c2e;">You're approved! Welcome to LifeGranted Adventures 🎊</h2>
+    <p>Congratulations, <strong>${businessName}</strong>! Your application has been reviewed and approved.</p>
+    <p>You can now log in to your operator portal to publish tours, manage bookings, and track earnings.</p>
+    <a href="${SITE_URL}/portal" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#1a3c2e;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Go to Operator Portal</a>
+    <p style="margin-top:32px;color:#666;font-size:13px;">LifeGranted Adventures · Tanzania Safari Marketplace</p>
+  </body></html>`
+  return dispatchHtml(operatorEmail, '✅ Your LifeGranted Adventures account is approved!', html)
+}
+
+export async function sendOperatorRejected(operatorEmail: string, businessName: string, reason: string) {
+  const html = `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:32px;">
+    <h2 style="color:#1a3c2e;">Application Update — LifeGranted Adventures</h2>
+    <p>Hi <strong>${businessName}</strong> team, thank you for your interest in joining LifeGranted Adventures.</p>
+    <p>After reviewing your application, we're unable to approve it at this time for the following reason:</p>
+    <div style="background:#fef2f2;border-left:4px solid #dc2626;padding:16px;border-radius:6px;margin:16px 0;">
+      <p style="margin:0;color:#991b1b;">${reason}</p>
+    </div>
+    <p>You're welcome to address the above and reapply. Reply to this email if you have questions.</p>
+    <p style="margin-top:32px;color:#666;font-size:13px;">LifeGranted Adventures · Tanzania Safari Marketplace</p>
+  </body></html>`
+  return dispatchHtml(operatorEmail, 'Update on your LifeGranted Adventures application', html)
+}
+
+export async function sendOperatorSuspended(operatorEmail: string, businessName: string, reason: string) {
+  const html = `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:32px;">
+    <h2 style="color:#1a3c2e;">Account Suspended — Action Required</h2>
+    <p>Hi <strong>${businessName}</strong> team, your LifeGranted Adventures operator account has been temporarily suspended.</p>
+    <div style="background:#fef2f2;border-left:4px solid #dc2626;padding:16px;border-radius:6px;margin:16px 0;">
+      <p style="margin:0;color:#991b1b;">${reason}</p>
+    </div>
+    <p>Your existing bookings are unaffected. New bookings and listings are paused until the suspension is lifted. Reply to this email to discuss reinstatement.</p>
+    <p style="margin-top:32px;color:#666;font-size:13px;">LifeGranted Adventures · Tanzania Safari Marketplace</p>
+  </body></html>`
+  return dispatchHtml(operatorEmail, '⚠️ Your LifeGranted Adventures account has been suspended', html)
+}
+
+// ─── New operator application notification ─────────────────────────────────
+
+export async function sendNewOperatorNotification(
+  businessName: string,
+  city: string,
+  operatorEmail: string
+) {
+  // Admin notification
+  await dispatchHtml(
+    ADMIN_EMAIL,
+    `New Operator Application — ${businessName}`,
+    `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:32px;">
+      <h2 style="color:#1a3c2e;">New Operator Application 📋</h2>
+      <table style="border-collapse:collapse;width:100%;margin:16px 0;">
+        <tr><td style="padding:8px;color:#666;width:140px;">Business</td><td style="padding:8px;font-weight:600;">${businessName}</td></tr>
+        <tr><td style="padding:8px;color:#666;">City</td><td style="padding:8px;font-weight:600;">${city}</td></tr>
+        <tr><td style="padding:8px;color:#666;">Email</td><td style="padding:8px;font-weight:600;">${operatorEmail}</td></tr>
+      </table>
+      <a href="${SITE_URL}/admin/operators" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#1a3c2e;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Review Application</a>
+    </body></html>`
+  )
+
+  // Confirmation to operator (only if email provided)
+  if (!operatorEmail) return
+  await dispatchHtml(
+    operatorEmail,
+    'Your LifeGranted Adventures application has been received',
+    `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:32px;">
+      <h2 style="color:#1a3c2e;">Application Received! 🎉</h2>
+      <p>Hi <strong>${businessName}</strong> team, thank you for applying to join LifeGranted Adventures!</p>
+      <p>Our team will review your application and respond within <strong>2–3 business days</strong>.</p>
+      <p style="margin-top:32px;color:#666;font-size:13px;">LifeGranted Adventures · Tanzania Safari Marketplace</p>
+    </body></html>`
+  )
+}
+
+// ─── Contact form ──────────────────────────────────────────────────────────
+
+export async function sendContactMessage(name: string, email: string, message: string) {
+  // Forward to admin
+  await dispatchHtml(
+    ADMIN_EMAIL,
+    `Contact Form — ${name}`,
+    `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:32px;">
+      <h2 style="color:#1a3c2e;">New Contact Form Message 💬</h2>
+      <table style="border-collapse:collapse;width:100%;margin:16px 0;">
+        <tr><td style="padding:8px;color:#666;width:80px;">From</td><td style="padding:8px;font-weight:600;">${name}</td></tr>
+        <tr><td style="padding:8px;color:#666;">Email</td><td style="padding:8px;font-weight:600;">${email}</td></tr>
+      </table>
+      <div style="background:#f9f9f7;border-radius:8px;padding:20px;margin-top:8px;">
+        <p style="margin:0;white-space:pre-wrap;">${message}</p>
+      </div>
+    </body></html>`,
+    { replyTo: email }
+  )
+
+  // Auto-reply to sender
+  await dispatchHtml(
+    email,
+    "We've received your message — LifeGranted Adventures",
+    `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:32px;">
+      <h2 style="color:#1a3c2e;">We've received your message 👋</h2>
+      <p>Hi ${name}, thank you for reaching out to LifeGranted Adventures!</p>
+      <p>We've received your message and will get back to you within 24 hours.</p>
+      <a href="${SITE_URL}/tours" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#1a3c2e;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Explore Tours</a>
+      <p style="margin-top:32px;color:#666;font-size:13px;">LifeGranted Adventures · Tanzania Safari Marketplace</p>
+    </body></html>`
+  )
 }
