@@ -59,9 +59,9 @@ export default function BookingConfirmationEmail({ booking, tour, operator }: Bo
 
             <Hr />
             <Text style={{ color: '#5A6B7A' }}>
-              Questions? WhatsApp us: +255000000000 | hello@lifegrantedadventures.co.tz
+              Questions? WhatsApp us: +255000000000 | hello@lifegranted-adventures.co.tz
             </Text>
-            <Button href="https://lifegrantedadventures.co.tz/account/bookings" style={{ backgroundColor: '#C9A84C', color: '#fff', padding: '12px 20px', borderRadius: 8 }}>
+            <Button href="https://lifegranted-adventures.co.tz/account/bookings" style={{ backgroundColor: '#C9A84C', color: '#fff', padding: '12px 20px', borderRadius: 8 }}>
               View My Booking
             </Button>
           </Section>
