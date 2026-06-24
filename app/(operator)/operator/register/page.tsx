@@ -149,7 +149,7 @@ export default function OperatorRegisterWizard() {
       await fetch('/api/notifications/new-operator', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ businessName: data.businessName, city: data.city }),
+        body: JSON.stringify({ businessName: data.businessName, city: data.city, email: data.email }),
       })
       setStep(5)
     } catch {
