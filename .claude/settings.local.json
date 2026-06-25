@@ -66,7 +66,8 @@
       "Bash(curl -s -o /dev/null -w \"portal:%{http_code}\\\\n\" http://localhost:3000/portal)",
       "Bash(curl -s -o /dev/null -w \"account:%{http_code}\\\\n\" http://localhost:3000/account/bookings)",
       "Bash(curl -s -o /dev/null -w \"tours:%{http_code}\\\\n\" http://localhost:3000/tours)",
-      "Bash(curl -s -o /dev/null -w \"operator:%{http_code}\\\\n\" http://localhost:3000/operators/namiri-tours-mwanza)"
+      "Bash(curl -s -o /dev/null -w \"operator:%{http_code}\\\\n\" http://localhost:3000/operators/namiri-tours-mwanza)",
+      "Bash(git merge *)"
     ]
   }
 }
