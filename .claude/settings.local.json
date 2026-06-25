@@ -56,7 +56,17 @@
       "Bash(curl -s -o /dev/null -w \"portal/bookings:%{http_code}\\\\n\" http://localhost:3000/portal/bookings)",
       "Bash(curl -s -o /dev/null -w \"account/bookings:%{http_code}\\\\n\" http://localhost:3000/account/bookings)",
       "Bash(curl -s http://localhost:3000/admin/bookings)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(curl -s 'https://lvivhnoaxrzrrprywnjs.supabase.co/rest/v1/operators?select=id,business_name&limit=5' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU')",
+      "Bash(curl -s 'https://lvivhnoaxrzrrprywnjs.supabase.co/rest/v1/reviews?select=id&limit=1' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU')",
+      "Bash(curl -s 'https://lvivhnoaxrzrrprywnjs.supabase.co/rest/v1/reviews?select=id,tourist_name,tourist_country,rating,is_published,is_verified&order=created_at.desc' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU')",
+      "Bash(curl -s https://lvivhnoaxrzrrprywnjs.supabase.co/rest/v1/tours?select=title,avg_rating,total_reviews -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/portal)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/account/bookings)",
+      "Bash(curl -s -o /dev/null -w \"portal:%{http_code}\\\\n\" http://localhost:3000/portal)",
+      "Bash(curl -s -o /dev/null -w \"account:%{http_code}\\\\n\" http://localhost:3000/account/bookings)",
+      "Bash(curl -s -o /dev/null -w \"tours:%{http_code}\\\\n\" http://localhost:3000/tours)",
+      "Bash(curl -s -o /dev/null -w \"operator:%{http_code}\\\\n\" http://localhost:3000/operators/namiri-tours-mwanza)"
     ]
   }
 }
