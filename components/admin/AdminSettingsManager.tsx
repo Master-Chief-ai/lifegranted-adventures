@@ -14,13 +14,13 @@ const NOTIFICATION_DEFAULTS = {
   ttbExpiryWarning: true,
 }
 
-const ADMIN_USERS = [{ email: 'stephen@lifegrantedadventures.co.tz', addedAt: '2025-01-10' }]
+const ADMIN_USERS = [{ email: 'stephen@lifegranted-adventures.co.tz', addedAt: '2025-01-10' }]
 
 export function AdminSettingsManager() {
   const [commissionRate, setCommissionRate] = useState(12)
   const [platformName, setPlatformName] = useState('LifeGranted Adventures')
   const [whatsapp, setWhatsapp] = useState('+255000000000')
-  const [email, setEmail] = useState('hello@lifegrantedadventures.co.tz')
+  const [email, setEmail] = useState('hello@lifegranted-adventures.co.tz')
   const [notifications, setNotifications] = useState(NOTIFICATION_DEFAULTS)
   const [inviteEmail, setInviteEmail] = useState('')
   const [admins, setAdmins] = useState(ADMIN_USERS)

@@ -639,7 +639,7 @@ export function TourForm({ tourId, initial }: { tourId?: string; initial?: TourF
             <p className="mt-1 text-xs text-muted">{form.seoDescription.length}/155</p>
           </div>
           <div className="rounded-lg border border-border bg-gray-50 p-4">
-            <p className="text-xs text-[#15803D]">lifegrantedadventures.co.tz › tours › {form.slug || 'your-tour-slug'}</p>
+            <p className="text-xs text-[#15803D]">lifegranted-adventures.co.tz › tours › {form.slug || 'your-tour-slug'}</p>
             <p className="mt-1 text-base text-blue-700">{form.seoTitle || form.title || 'Your tour title'}</p>
             <p className="mt-1 text-sm text-gray-600">{form.seoDescription || form.shortDescription || 'Your meta description will appear here.'}</p>
           </div>

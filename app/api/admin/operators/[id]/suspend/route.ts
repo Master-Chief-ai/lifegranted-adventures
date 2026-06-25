@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { adminSupabase } from '@/lib/supabase/admin'
 import { getOperatorById } from '@/lib/supabase/queries'
+import { sendOperatorSuspended } from '@/lib/email'
 
 const schema = z.object({ reason: z.string().min(1) })
 
@@ -16,8 +17,22 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
 
   try {
-    const { error } = await adminSupabase.from('operators').update({ status: 'suspended' }).eq('id', id)
+    const { error } = await adminSupabase
+      .from('operators')
+      .update({ status: 'suspended' })
+      .eq('id', id)
     if (error) throw error
+
+    const { data: operator } = await adminSupabase
+      .from('operators')
+      .select('email, business_name')
+      .eq('id', id)
+      .single()
+
+    if (operator?.email) {
+      await sendOperatorSuspended(operator.email, operator.business_name, reason)
+    }
+
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Failed to suspend operator', error)

@@ -40,7 +40,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     publisher: {
       '@type': 'Organization',
       name: 'LifeGranted Adventures',
-      logo: { '@type': 'ImageObject', url: 'https://lifegrantedadventures.co.tz/logo.png' },
+      logo: { '@type': 'ImageObject', url: 'https://lifegranted-adventures.co.tz/logo.png' },
     },
   }
 
@@ -48,9 +48,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://lifegrantedadventures.co.tz' },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://lifegrantedadventures.co.tz/blog' },
-      { '@type': 'ListItem', position: 3, name: post.title, item: `https://lifegrantedadventures.co.tz/blog/${post.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://lifegranted-adventures.co.tz' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://lifegranted-adventures.co.tz/blog' },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `https://lifegranted-adventures.co.tz/blog/${post.slug}` },
     ],
   }
 

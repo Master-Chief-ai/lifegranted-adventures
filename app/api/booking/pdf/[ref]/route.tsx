@@ -102,7 +102,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ ref
         <Text style={styles.listItem}>Meeting Point: Your operator will send meeting instructions 24 hours before departure.</Text>
         <Text style={styles.listItem}>Emergency Contact: LifeGranted Adventures WhatsApp: +255000000000</Text>
 
-        <Text style={styles.footer}>Thank you for booking with LifeGranted Adventures | lifegrantedadventures.co.tz</Text>
+        <Text style={styles.footer}>Thank you for booking with LifeGranted Adventures | lifegranted-adventures.co.tz</Text>
       </Page>
     </Document>
   )

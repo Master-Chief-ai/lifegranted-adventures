@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { adminSupabase } from '@/lib/supabase/admin'
 import { getOperatorById } from '@/lib/supabase/queries'
+import { sendOperatorApproved } from '@/lib/email'
 
 export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -12,8 +13,22 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
   }
 
   try {
-    const { error } = await adminSupabase.from('operators').update({ status: 'approved', verified_at: new Date().toISOString() }).eq('id', id)
+    const { error } = await adminSupabase
+      .from('operators')
+      .update({ status: 'approved', verified_at: new Date().toISOString() })
+      .eq('id', id)
     if (error) throw error
+
+    const { data: operator } = await adminSupabase
+      .from('operators')
+      .select('email, business_name')
+      .eq('id', id)
+      .single()
+
+    if (operator?.email) {
+      await sendOperatorApproved(operator.email, operator.business_name)
+    }
+
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Failed to approve operator', error)

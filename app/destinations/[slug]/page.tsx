@@ -49,9 +49,9 @@ export default async function DestinationDetailPage({ params }: { params: Promis
           '@context': 'https://schema.org',
           '@type': 'BreadcrumbList',
           itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://lifegrantedadventures.co.tz' },
-            { '@type': 'ListItem', position: 2, name: 'Destinations', item: 'https://lifegrantedadventures.co.tz/destinations' },
-            { '@type': 'ListItem', position: 3, name: destination.name, item: `https://lifegrantedadventures.co.tz/destinations/${destination.slug}` },
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://lifegranted-adventures.co.tz' },
+            { '@type': 'ListItem', position: 2, name: 'Destinations', item: 'https://lifegranted-adventures.co.tz/destinations' },
+            { '@type': 'ListItem', position: 3, name: destination.name, item: `https://lifegranted-adventures.co.tz/destinations/${destination.slug}` },
           ],
         }}
       />

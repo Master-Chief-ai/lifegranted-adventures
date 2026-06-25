@@ -12,8 +12,8 @@ export async function getCurrentAdmin(): Promise<AdminUser> {
   if (isSupabaseConfigured()) {
     const profile = await getUserProfile()
     if (profile) {
-      return { name: profile.full_name ?? 'Admin', email: 'admin@lifegrantedadventures.co.tz' }
+      return { name: profile.full_name ?? 'Admin', email: 'admin@lifegranted-adventures.co.tz' }
     }
   }
-  return { name: 'Stephen (Admin)', email: 'stephen@lifegrantedadventures.co.tz' }
+  return { name: 'Stephen (Admin)', email: 'stephen@lifegranted-adventures.co.tz' }
 }

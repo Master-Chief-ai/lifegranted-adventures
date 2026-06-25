@@ -91,7 +91,7 @@ export default function ContactPage() {
               <Mail size={20} />
             </span>
             <div>
-              <p className="font-semibold text-navy">hello@lifegrantedadventures.co.tz</p>
+              <p className="font-semibold text-navy">hello@lifegranted-adventures.co.tz</p>
               <p className="text-sm text-muted">Email support</p>
             </div>
           </div>

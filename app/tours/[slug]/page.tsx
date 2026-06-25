@@ -76,9 +76,9 @@ export default async function TourDetailPage({ params }: { params: Promise<{ slu
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://lifegrantedadventures.co.tz' },
-      { '@type': 'ListItem', position: 2, name: 'Tours', item: 'https://lifegrantedadventures.co.tz/tours' },
-      { '@type': 'ListItem', position: 3, name: tour.title, item: `https://lifegrantedadventures.co.tz/tours/${tour.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://lifegranted-adventures.co.tz' },
+      { '@type': 'ListItem', position: 2, name: 'Tours', item: 'https://lifegranted-adventures.co.tz/tours' },
+      { '@type': 'ListItem', position: 3, name: tour.title, item: `https://lifegranted-adventures.co.tz/tours/${tour.slug}` },
     ],
   }
 

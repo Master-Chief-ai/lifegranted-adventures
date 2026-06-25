@@ -18,7 +18,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://lifegrantedadventures.co.tz'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://lifegranted-adventures.co.tz'),
   title: {
     template: '%s | LifeGranted Adventures',
     default: 'LifeGranted Adventures — Tanzania Safari Marketplace',
@@ -37,12 +37,12 @@ export const metadata: Metadata = {
     'Tanzania tour operator',
     'Rubondo Island',
   ],
-  authors: [{ name: 'LifeGranted Adventures', url: 'https://lifegrantedadventures.co.tz' }],
+  authors: [{ name: 'LifeGranted Adventures', url: 'https://lifegranted-adventures.co.tz' }],
   creator: 'LifeGranted Adventures',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://lifegrantedadventures.co.tz',
+    url: 'https://lifegranted-adventures.co.tz',
     siteName: 'LifeGranted Adventures',
     title: 'LifeGranted Adventures — Tanzania Safari Marketplace',
     description: 'Book Tanzania safaris direct with vetted local operators. Western Tanzania specialists.',

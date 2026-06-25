@@ -53,9 +53,9 @@ export default async function OperatorDetailPage({ params }: { params: Promise<{
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://lifegrantedadventures.co.tz' },
-      { '@type': 'ListItem', position: 2, name: 'Operators', item: 'https://lifegrantedadventures.co.tz/operators' },
-      { '@type': 'ListItem', position: 3, name: operator.business_name, item: `https://lifegrantedadventures.co.tz/operators/${operator.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://lifegranted-adventures.co.tz' },
+      { '@type': 'ListItem', position: 2, name: 'Operators', item: 'https://lifegranted-adventures.co.tz/operators' },
+      { '@type': 'ListItem', position: 3, name: operator.business_name, item: `https://lifegranted-adventures.co.tz/operators/${operator.slug}` },
     ],
   }
 

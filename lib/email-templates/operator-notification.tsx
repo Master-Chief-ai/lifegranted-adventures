@@ -38,7 +38,7 @@ export default function OperatorNotificationEmail({ booking, tour }: OperatorNot
           <Text style={{ margin: 0 }}>LifeGranted Adventures fee (12%): {formatCurrency(booking.platform_fee_usd)}</Text>
           <Text style={{ margin: 0 }}>Your payout: {formatCurrency(booking.operator_payout_usd)} (paid within 3 business days of tour completion)</Text>
 
-          <Button href="https://lifegrantedadventures.co.tz/portal/bookings" style={{ backgroundColor: '#006B6B', color: '#fff', padding: '12px 20px', borderRadius: 8, marginTop: 16 }}>
+          <Button href="https://lifegranted-adventures.co.tz/portal/bookings" style={{ backgroundColor: '#006B6B', color: '#fff', padding: '12px 20px', borderRadius: 8, marginTop: 16 }}>
             View in Operator Portal
           </Button>
         </Container>
