@@ -30,7 +30,7 @@ export default function ReviewRequestEmail({ booking, tour, operatorName }: Revi
           </Text>
           <Section style={{ marginTop: 16 }}>
             <Button
-              href={`https://lifegrantedadventures.co.tz/account/reviews/new/${booking.booking_ref}`}
+              href={`https://lifegranted-adventures.co.tz/account/reviews/new/${booking.booking_ref}`}
               style={{ backgroundColor: '#C9A84C', color: '#fff', padding: '12px 24px', borderRadius: 8 }}
             >
               Leave a Review
