@@ -5,6 +5,7 @@ import { isSupabaseConfigured, MOCK_TOURS, MOCK_OPERATORS } from '@/lib/supabase
 import { addRuntimeBooking } from '@/lib/supabase/runtime-bookings'
 import { sendBookingConfirmation } from '@/lib/email'
 import { initiatePayment, calculateFees, flutterwaveEnabled } from '@/lib/flutterwave'
+import { calculateBookingFees } from '@/lib/commission'
 import type { Booking, Tour, Operator, TourAddon } from '@/types'
 
 const schema = z.object({
@@ -64,6 +65,8 @@ export async function POST(request: Request) {
     const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price_usd, 0) * data.groupSize
     const tourTotal = tour.price_usd * data.groupSize + addonsTotal
     const { bookingFee, grandTotal, platformCommission, operatorPayout } = calculateFees(tourTotal, data.paymentMethod)
+    const paymentMethodGroup = data.paymentMethod === 'card' ? 'card' : 'mobile'
+    const commissionFees = calculateBookingFees(tourTotal, paymentMethodGroup)
     const txRef = generateBookingRef()
 
     const paymentResult = await initiatePayment({
@@ -96,10 +99,10 @@ export async function POST(request: Request) {
       medical_notes: data.medicalNotes ?? null,
       addons: selectedAddons,
       total_usd: tourTotal,
-      platform_fee_usd: platformCommission,
-      operator_payout_usd: operatorPayout,
-      booking_fee_usd: bookingFee,
-      charged_to_tourist_usd: grandTotal,
+      platform_fee_usd: commissionFees.platformCommission,
+      operator_payout_usd: commissionFees.operatorPayout,
+      booking_fee_usd: commissionFees.bookingFee,
+      charged_to_tourist_usd: commissionFees.touristTotal,
       payment_status: isMock ? 'paid' : 'pending',
       payment_method: data.paymentMethod,
       booking_status: isMock ? 'confirmed' : 'pending',
@@ -127,10 +130,12 @@ export async function POST(request: Request) {
             medical_notes: data.medicalNotes ?? null,
             addons: selectedAddons,
             total_usd: tourTotal,
-            platform_fee_usd: platformCommission,
-            operator_payout_usd: operatorPayout,
-            booking_fee_usd: bookingFee,
-            charged_to_tourist_usd: grandTotal,
+            platform_fee_usd: commissionFees.platformCommission,
+            guarantee_fund_contribution: commissionFees.guaranteeFundContribution,
+            platform_operating_revenue: commissionFees.platformOperatingRevenue,
+            operator_payout_usd: commissionFees.operatorPayout,
+            booking_fee_usd: commissionFees.bookingFee,
+            charged_to_tourist_usd: commissionFees.touristTotal,
             payment_status: booking.payment_status,
             booking_status: booking.booking_status,
             payment_method: data.paymentMethod,

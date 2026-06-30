@@ -75,7 +75,7 @@ export default async function AdminDashboardPage() {
         </Card>
         <Card className="p-4">
           <p className="font-display text-2xl font-bold text-gold-dark">{formatCurrency(metrics.revenue)}</p>
-          <p className="text-xs text-muted">Platform revenue (12%)</p>
+          <p className="text-xs text-muted">Platform revenue (15%)</p>
         </Card>
         <Card className="p-4">
           <p className="font-display text-2xl font-bold text-teal">{metrics.bookingsToday}</p>

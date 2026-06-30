@@ -121,7 +121,7 @@ export const COUNTRIES = [
   { code: 'SG', name: 'Singapore' },
 ]
 
-export const PLATFORM_COMMISSION = 0.12
+export const PLATFORM_COMMISSION = 0.15
 export const USD_TO_TZS = 2600
 
 export interface Destination {

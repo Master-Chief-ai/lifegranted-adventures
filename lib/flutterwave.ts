@@ -1,3 +1,5 @@
+import { COMMISSION } from './commission'
+
 const secretKey = process.env.FLUTTERWAVE_SECRET_KEY
 
 export const flutterwaveEnabled = !!secretKey && !secretKey.includes('placeholder')
@@ -28,8 +30,8 @@ export function calculateFees(tourTotalUsd: number, paymentMethod: FlutterwavePa
   const feeRate = FLUTTERWAVE_FEES[paymentMethod]
   const bookingFee = Math.round(tourTotalUsd * feeRate * 100) / 100
   const grandTotal = Math.round((tourTotalUsd + bookingFee) * 100) / 100
-  const platformCommission = Math.round(tourTotalUsd * 0.12 * 100) / 100
-  const operatorPayout = Math.round(tourTotalUsd * 0.88 * 100) / 100
+  const platformCommission = Math.round(tourTotalUsd * COMMISSION.total * 100) / 100
+  const operatorPayout = Math.round(tourTotalUsd * COMMISSION.operator * 100) / 100
 
   return {
     tourTotal: tourTotalUsd,
@@ -65,7 +67,7 @@ export async function initiatePayment(params: InitiatePaymentParams) {
     currency: params.currency,
     redirect_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/booking/flutterwave-callback`,
     customer: { email: params.email, phone_number: params.phone, name: params.name },
-    subaccounts: params.operatorSubaccountId ? [{ id: params.operatorSubaccountId, transaction_split_ratio: 88 }] : [],
+    subaccounts: params.operatorSubaccountId ? [{ id: params.operatorSubaccountId, transaction_split_ratio: 85 }] : [],
     customizations: {
       title: 'LifeGranted Adventures',
       description: 'Tanzania Safari Booking',
@@ -114,7 +116,7 @@ export async function createSubaccount(operator: CreateSubaccountParams) {
       business_email: operator.email,
       country: 'TZ',
       split_type: 'percentage',
-      split_value: 0.88,
+      split_value: 0.85,
     }),
   })
   return response.json()

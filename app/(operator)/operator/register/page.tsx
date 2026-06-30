@@ -45,7 +45,7 @@ interface WizardState {
 }
 
 const BENEFITS = [
-  { icon: Zap, text: '12% commission — lowest in Tanzania' },
+  { icon: Zap, text: '15% commission — well below industry average' },
   { icon: CheckCircle2, text: 'Instant booking technology' },
   { icon: Smartphone, text: 'M-Pesa payments included' },
   { icon: Megaphone, text: 'Western Tanzania marketing reach' },
@@ -315,7 +315,7 @@ function Step2Payout({
     <div className="mx-auto max-w-lg py-10">
       <h1 className="font-display text-2xl font-bold text-navy">Set up your payout account</h1>
       <div className="mt-4 rounded-xl border border-teal/30 bg-teal-light p-5 text-sm text-teal">
-        Every booking you receive, we automatically transfer 88% to your bank account within 3 business days of tour
+        Every booking you receive, we automatically transfer 85% to your bank account within 3 business days of tour
         completion via Flutterwave. Setup takes about 2 minutes.
       </div>
 

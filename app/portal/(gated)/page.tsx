@@ -117,7 +117,7 @@ export default async function PortalDashboardPage() {
         <Card className="p-5">
           <p className="font-display text-3xl font-bold text-gold-dark">{formatCurrency(stats.revenue)}</p>
           <p className="text-sm text-muted">Earned this month</p>
-          <p className="mt-1 text-xs text-muted">{formatCurrency(stats.platformFee)} platform fee deducted (12%)</p>
+          <p className="mt-1 text-xs text-muted">{formatCurrency(stats.platformFee)} platform fee deducted (15%)</p>
         </Card>
         <Card className="p-5">
           <p className="font-display text-3xl font-bold text-navy">⭐ {stats.rating.toFixed(1)}</p>

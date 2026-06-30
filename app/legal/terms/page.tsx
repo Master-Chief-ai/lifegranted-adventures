@@ -19,8 +19,8 @@ export default function TermsPage() {
         </p>
         <h2 className="font-display text-xl font-bold text-navy">2. Bookings and Payments</h2>
         <p>
-          All bookings are processed securely. The platform retains a 12% commission on each booking; operators receive
-          the remaining 88% automatically.
+          All bookings are processed securely. The platform retains a 15% commission on each booking (including a 3% Guarantee Fund contribution); operators receive
+          the remaining 85% automatically.
         </p>
         <h2 className="font-display text-xl font-bold text-navy">3. Cancellations</h2>
         <p>Cancellation terms vary by tour and are displayed at the time of booking. See our Refund Policy for details.</p>

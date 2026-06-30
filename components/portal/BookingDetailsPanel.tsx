@@ -147,7 +147,7 @@ export function BookingDetailsPanel({
               <span className="text-navy">{formatCurrency(booking.total_usd)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted">Platform fee (12%)</span>
+              <span className="text-muted">Platform fee (15%)</span>
               <span className="text-[#B91C1C]">−{formatCurrency(booking.platform_fee_usd)}</span>
             </div>
             <div className="flex justify-between border-t border-border pt-2 text-base font-bold">

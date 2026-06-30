@@ -33,7 +33,7 @@ export default function AboutPage() {
         <div>
           <Heart className="text-teal" size={28} />
           <p className="mt-2 font-semibold text-navy">Fair Commission</p>
-          <p className="text-sm text-muted">We take 12% — half what most international marketplaces charge.</p>
+          <p className="text-sm text-muted">We take 15% — our guarantee-backed commission, still well below the 20–30% charged by international platforms.</p>
         </div>
         <div>
           <Compass className="text-teal" size={28} />
@@ -45,7 +45,7 @@ export default function AboutPage() {
       <h2 className="mt-10 font-display text-2xl font-bold text-navy">Our Commitments</h2>
       <ul className="mt-3 space-y-2 text-navy/90">
         <li>• Every booking is protected by secure payment processing</li>
-        <li>• Operators receive 88% of every booking, paid automatically</li>
+        <li>• Operators receive 85% of every booking, paid automatically</li>
         <li>• We verify TTB licensing before listing any operator</li>
         <li>• Reviews are only from travelers who completed a verified booking</li>
       </ul>
