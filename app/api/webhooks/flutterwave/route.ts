@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { isSupabaseConfigured } from '@/lib/supabase/mock-data'
+import { recordFundContribution } from '@/lib/guarantee-fund'
 
 const secretKey = process.env.FLUTTERWAVE_SECRET_KEY
 
@@ -18,10 +19,16 @@ export async function POST(request: Request) {
     const payload = await request.json()
     if (payload.event === 'charge.completed' && payload.data?.status === 'successful' && isSupabaseConfigured()) {
       const supabase = await createClient()
-      await supabase
+      const { data: booking } = await supabase
         .from('bookings')
         .update({ payment_status: 'paid', booking_status: 'confirmed' })
         .eq('flutterwave_tx_ref', payload.data.tx_ref)
+        .select('id, total_usd')
+        .single()
+
+      if (booking?.id) {
+        await recordFundContribution(booking.id, booking.total_usd)
+      }
     }
   } catch (error) {
     console.error('Flutterwave webhook handling failed', error)

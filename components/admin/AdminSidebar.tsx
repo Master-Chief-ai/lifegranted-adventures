@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Building2, ClipboardList, Scale, Star, FileText, Settings, Menu, X, LogOut } from 'lucide-react'
+import { LayoutDashboard, Building2, ClipboardList, Scale, Star, FileText, Settings, Menu, X, LogOut, ShieldCheck } from 'lucide-react'
 import type { AdminUser } from '@/lib/admin-auth'
 
 const NAV_ITEMS = [
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: '/admin/disputes', label: 'Disputes', icon: Scale },
   { href: '/admin/reviews', label: 'Reviews', icon: Star },
   { href: '/admin/blog', label: 'Blog', icon: FileText },
+  { href: '/admin/guarantee-fund', label: 'Guarantee Fund', icon: ShieldCheck },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]
 

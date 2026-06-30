@@ -67,7 +67,10 @@
       "Bash(curl -s -o /dev/null -w \"account:%{http_code}\\\\n\" http://localhost:3000/account/bookings)",
       "Bash(curl -s -o /dev/null -w \"tours:%{http_code}\\\\n\" http://localhost:3000/tours)",
       "Bash(curl -s -o /dev/null -w \"operator:%{http_code}\\\\n\" http://localhost:3000/operators/namiri-tours-mwanza)",
-      "Bash(git merge *)"
+      "Bash(git merge *)",
+      "Bash(curl -s -X POST https://lvivhnoaxrzrrprywnjs.supabase.co/rest/v1/rpc/query -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU' -H 'Content-Type: application/json' -d '{\"query\": \"SELECT 1\"}')",
+      "Bash(curl -s https://lvivhnoaxrzrrprywnjs.supabase.co/rest/v1/guarantee_fund_balance?limit=1 -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU')",
+      "Bash(curl -s https://lvivhnoaxrzrrprywnjs.supabase.co/pg-meta/v1/query -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2aXZobm9heHJ6cnJwcnl3bmpzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjA2MzM0MywiZXhwIjoyMDk3NjM5MzQzfQ.Dk9fau3qYntHnGHIsrajJTzNDOi4eOzka-LNniWu6yU' -H 'Content-Type: application/json' -d '{\"query\":\"SELECT current_database\\(\\)\"}')"
     ]
   }
 }
