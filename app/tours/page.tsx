@@ -8,6 +8,8 @@ import { buttonVariants } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 import type { TourFilters } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Browse Tanzania Tours',
   description: 'Search and compare Tanzania safari tours, treks, and beach escapes from vetted local operators.',
