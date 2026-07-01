@@ -5,6 +5,14 @@ import BookingConfirmationEmail, { bookingConfirmationSubject } from '@/lib/emai
 import OperatorNotificationEmail, { operatorNotificationSubject } from '@/lib/email-templates/operator-notification'
 import PreDepartureEmail, { preDepartureSubject } from '@/lib/email-templates/pre-departure'
 import ReviewRequestEmail, { reviewRequestSubject } from '@/lib/email-templates/review-request'
+import RefundSubmittedTouristEmail, { refundSubmittedTouristSubject } from '@/lib/email-templates/refunds/refund-submitted-tourist'
+import OperatorDisputeNotificationEmail, { operatorDisputeNotificationSubject } from '@/lib/email-templates/refunds/operator-dispute-notification'
+import AdminDisputeAlertEmail, { adminDisputeAlertSubject } from '@/lib/email-templates/refunds/admin-dispute-alert'
+import RefundDecisionTouristEmail, { refundDecisionTouristSubject } from '@/lib/email-templates/refunds/refund-decision-tourist'
+import RefundPaidConfirmationEmail, { refundPaidConfirmationSubject } from '@/lib/email-templates/refunds/refund-paid-confirmation'
+import type { RefundReason } from '@/types/refunds'
+import { REFUND_REASON_LABELS } from '@/types/refunds'
+import { formatCurrency, formatDate } from '@/lib/utils'
 
 const apiKey = process.env.RESEND_API_KEY
 const emailEnabled = !!apiKey && !apiKey.includes('placeholder')
@@ -196,5 +204,131 @@ export async function sendContactMessage(name: string, email: string, message: s
       <a href="${SITE_URL}/tours" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#1a3c2e;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Explore Tours</a>
       <p style="margin-top:32px;color:#666;font-size:13px;">LifeGranted Adventures · Tanzania Safari Marketplace</p>
     </body></html>`
+  )
+}
+
+// ─── Refund emails ─────────────────────────────────────────────────────────
+
+export interface RefundEmailPayload {
+  touristName: string
+  touristEmail: string
+  operatorEmail: string | null
+  operatorName: string
+  refundRef: string
+  bookingRef: string
+  tourTitle: string
+  travelDate: string
+  groupSize: number
+  amountPaid: number
+  reasonCategory: RefundReason
+  touristStatement: string
+  operatorDeadline: string
+}
+
+export async function sendRefundSubmittedEmails(payload: RefundEmailPayload) {
+  const trackingUrl = `${SITE_URL}/account/refunds/${payload.refundRef}`
+  const responseUrl = `${SITE_URL}/portal/disputes/${payload.refundRef}`
+  const reasonLabel = REFUND_REASON_LABELS[payload.reasonCategory]
+  const amountStr = formatCurrency(payload.amountPaid)
+
+  await Promise.all([
+    dispatchEmail(
+      payload.touristEmail,
+      refundSubmittedTouristSubject(payload.refundRef),
+      <RefundSubmittedTouristEmail
+        touristName={payload.touristName}
+        tourTitle={payload.tourTitle}
+        refundRef={payload.refundRef}
+        operatorDeadline={payload.operatorDeadline}
+        trackingUrl={trackingUrl}
+      />
+    ),
+    payload.operatorEmail
+      ? dispatchEmail(
+          payload.operatorEmail,
+          operatorDisputeNotificationSubject(payload.refundRef, payload.bookingRef, payload.operatorDeadline),
+          <OperatorDisputeNotificationEmail
+            operatorName={payload.operatorName}
+            refundRef={payload.refundRef}
+            bookingRef={payload.bookingRef}
+            touristName={payload.touristName}
+            tourTitle={payload.tourTitle}
+            travelDate={formatDate(payload.travelDate)}
+            groupSize={payload.groupSize}
+            amountPaid={amountStr}
+            reasonLabel={reasonLabel}
+            touristStatement={payload.touristStatement}
+            deadline={payload.operatorDeadline}
+            responseUrl={responseUrl}
+          />
+        )
+      : Promise.resolve({ success: true }),
+    dispatchEmail(
+      ADMIN_EMAIL,
+      adminDisputeAlertSubject(payload.refundRef, reasonLabel, amountStr),
+      <AdminDisputeAlertEmail
+        refundRef={payload.refundRef}
+        bookingRef={payload.bookingRef}
+        reasonLabel={reasonLabel}
+        amountPaid={amountStr}
+        touristName={payload.touristName}
+        tourTitle={payload.tourTitle}
+        operatorName={payload.operatorName}
+        adminUrl={`${SITE_URL}/admin/disputes`}
+      />
+    ),
+  ])
+}
+
+export async function sendRefundDecision(
+  touristEmail: string,
+  touristName: string,
+  refundRef: string,
+  approved: boolean,
+  approvedAmount: number | undefined,
+  decisionSummary: string
+) {
+  return dispatchEmail(
+    touristEmail,
+    refundDecisionTouristSubject(refundRef, approved, approvedAmount),
+    <RefundDecisionTouristEmail
+      touristName={touristName}
+      refundRef={refundRef}
+      approved={approved}
+      approvedAmount={approvedAmount}
+      decisionSummary={decisionSummary}
+    />
+  )
+}
+
+export async function sendRefundPaid(touristEmail: string, touristName: string, refundRef: string, amount: number, paymentMethod: string) {
+  return dispatchEmail(
+    touristEmail,
+    refundPaidConfirmationSubject(refundRef, amount),
+    <RefundPaidConfirmationEmail touristName={touristName} refundRef={refundRef} amount={amount} paymentMethod={paymentMethod} />
+  )
+}
+
+export async function sendOperatorDisputeNotification(payload: RefundEmailPayload) {
+  if (!payload.operatorEmail) return { success: false }
+  const responseUrl = `${SITE_URL}/portal/disputes/${payload.refundRef}`
+  const reasonLabel = REFUND_REASON_LABELS[payload.reasonCategory]
+  return dispatchEmail(
+    payload.operatorEmail,
+    operatorDisputeNotificationSubject(payload.refundRef, payload.bookingRef, payload.operatorDeadline),
+    <OperatorDisputeNotificationEmail
+      operatorName={payload.operatorName}
+      refundRef={payload.refundRef}
+      bookingRef={payload.bookingRef}
+      touristName={payload.touristName}
+      tourTitle={payload.tourTitle}
+      travelDate={formatDate(payload.travelDate)}
+      groupSize={payload.groupSize}
+      amountPaid={formatCurrency(payload.amountPaid)}
+      reasonLabel={reasonLabel}
+      touristStatement={payload.touristStatement}
+      deadline={payload.operatorDeadline}
+      responseUrl={responseUrl}
+    />
   )
 }

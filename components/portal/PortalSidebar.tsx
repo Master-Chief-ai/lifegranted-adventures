@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Palmtree, CalendarDays, ClipboardList, Wallet, Star, User, Menu, X, LogOut } from 'lucide-react'
+import { LayoutDashboard, Palmtree, CalendarDays, ClipboardList, Wallet, Star, User, Menu, X, LogOut, Scale } from 'lucide-react'
 import type { Operator } from '@/types'
 
 const NAV_ITEMS = [
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: '/portal/bookings', label: 'Bookings', icon: ClipboardList },
   { href: '/portal/payouts', label: 'Payouts', icon: Wallet },
   { href: '/portal/reviews', label: 'Reviews', icon: Star },
+  { href: '/portal/disputes', label: 'Disputes', icon: Scale },
   { href: '/portal/profile', label: 'My Profile', icon: User },
 ]
 

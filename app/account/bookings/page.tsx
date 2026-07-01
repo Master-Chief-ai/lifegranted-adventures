@@ -71,6 +71,11 @@ export default async function AccountBookingsPage({ searchParams }: { searchPara
                     Write Review
                   </Link>
                 )}
+                {(tab === 'upcoming' || tab === 'past') && booking.booking_status !== 'cancelled' && booking.booking_status !== 'refunded' && (
+                  <Link href={`/account/bookings/${booking.booking_ref}/refund`} className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}>
+                    Request Refund
+                  </Link>
+                )}
                 {tab === 'upcoming' && (
                   <a href={`https://wa.me/255000000000`} target="_blank" rel="noopener noreferrer" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}>
                     Contact Operator
