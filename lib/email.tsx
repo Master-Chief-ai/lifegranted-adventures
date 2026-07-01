@@ -1,3 +1,4 @@
+import React from 'react'
 import { Resend } from 'resend'
 import { render } from '@react-email/components'
 import type { Booking, Tour, Operator } from '@/types'
@@ -13,6 +14,11 @@ import RefundPaidConfirmationEmail, { refundPaidConfirmationSubject } from '@/li
 import type { RefundReason } from '@/types/refunds'
 import { REFUND_REASON_LABELS } from '@/types/refunds'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import OperatorRecoveryNoticeEmail, { operatorRecoveryNoticeSubject } from '@/lib/email-templates/recovery/operator-recovery-notice'
+import OperatorRecoveryReminderEmail, { operatorRecoveryReminderSubject } from '@/lib/email-templates/recovery/operator-recovery-reminder'
+import OperatorRecoveryCompleteEmail, { operatorRecoveryCompleteSubject } from '@/lib/email-templates/recovery/operator-recovery-complete'
+import OperatorAppealReceivedEmail, { operatorAppealReceivedSubject } from '@/lib/email-templates/recovery/operator-appeal-received'
+import OperatorAppealDecisionEmail, { operatorAppealDecisionSubject } from '@/lib/email-templates/recovery/operator-appeal-decision'
 
 const apiKey = process.env.RESEND_API_KEY
 const emailEnabled = !!apiKey && !apiKey.includes('placeholder')
@@ -330,5 +336,82 @@ export async function sendOperatorDisputeNotification(payload: RefundEmailPayloa
       deadline={payload.operatorDeadline}
       responseUrl={responseUrl}
     />
+  )
+}
+
+// ─── Recovery emails ────────────────────────────────────────────────────────
+
+export interface RecoveryEmailPayload {
+  operatorEmail: string
+  operatorName: string
+  recoveryRef: string
+  refundRef: string
+  bookingRef: string
+  tourTitle: string
+  travelDate: string
+  touristName: string
+  totalRefunded: number
+  securityDepositApplied: number
+  remainingToRecover: number
+  appealDeadline: string
+}
+
+export async function sendRecoveryNotice(payload: RecoveryEmailPayload) {
+  const portalUrl = `${SITE_URL}/portal/recovery/${payload.recoveryRef}`
+  const appealUrl = `${SITE_URL}/portal/recovery/${payload.recoveryRef}?action=appeal`
+  const acknowledgeUrl = `${SITE_URL}/api/recovery/${payload.recoveryRef}/acknowledge`
+  return dispatchEmail(
+    payload.operatorEmail,
+    operatorRecoveryNoticeSubject(payload.recoveryRef, formatCurrency(payload.remainingToRecover)),
+    React.createElement(OperatorRecoveryNoticeEmail, {
+      operatorName: payload.operatorName,
+      recoveryRef: payload.recoveryRef,
+      refundRef: payload.refundRef,
+      bookingRef: payload.bookingRef,
+      tourTitle: payload.tourTitle,
+      travelDate: payload.travelDate,
+      touristName: payload.touristName,
+      totalRefunded: formatCurrency(payload.totalRefunded),
+      securityDepositApplied: formatCurrency(payload.securityDepositApplied),
+      remainingToRecover: formatCurrency(payload.remainingToRecover),
+      appealDeadline: payload.appealDeadline,
+      portalUrl,
+      appealUrl,
+      acknowledgeUrl,
+    })
+  )
+}
+
+export async function sendRecoveryReminder(operatorEmail: string, operatorName: string, recoveryRef: string, appealDeadline: string) {
+  const portalUrl = `${SITE_URL}/portal/recovery/${recoveryRef}`
+  const appealUrl = `${SITE_URL}/portal/recovery/${recoveryRef}?action=appeal`
+  return dispatchEmail(
+    operatorEmail,
+    operatorRecoveryReminderSubject(recoveryRef, appealDeadline),
+    React.createElement(OperatorRecoveryReminderEmail, { operatorName, recoveryRef, appealDeadline, appealUrl, portalUrl })
+  )
+}
+
+export async function sendRecoveryComplete(operatorEmail: string, operatorName: string, recoveryRef: string, totalRecovered: number) {
+  return dispatchEmail(
+    operatorEmail,
+    operatorRecoveryCompleteSubject(recoveryRef, formatCurrency(totalRecovered)),
+    React.createElement(OperatorRecoveryCompleteEmail, { operatorName, recoveryRef, totalRecovered: formatCurrency(totalRecovered) })
+  )
+}
+
+export async function sendAppealReceived(operatorEmail: string, operatorName: string, recoveryRef: string) {
+  return dispatchEmail(
+    operatorEmail,
+    operatorAppealReceivedSubject(recoveryRef),
+    React.createElement(OperatorAppealReceivedEmail, { operatorName, recoveryRef })
+  )
+}
+
+export async function sendAppealDecision(operatorEmail: string, operatorName: string, recoveryRef: string, upheld: boolean, decisionNotes: string) {
+  return dispatchEmail(
+    operatorEmail,
+    operatorAppealDecisionSubject(recoveryRef, upheld),
+    React.createElement(OperatorAppealDecisionEmail, { operatorName, recoveryRef, upheld, decisionNotes })
   )
 }
